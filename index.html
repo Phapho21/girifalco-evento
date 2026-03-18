@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Nuova Lista Sta Arrivando</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --yellow: #f5c518;
+      --yellow-dim: #c49a10;
+      --black: #000000;
+      --electric: #1e90ff;
+      --electric-dim: #0a5cbf;
+      --easter-size: 36px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--yellow);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* === STARFIELD === */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* === GRAIN OVERLAY === */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.35;
+    }
+
+    /* ===================== HERO ===================== */
+    .hero {
+      flex: 0 0 60vh;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    /* scanline effect */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.12) 3px,
+        rgba(0,0,0,0.12) 4px
+      );
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 10vw, 9rem);
+      letter-spacing: 0.04em;
+      text-align: center;
+      line-height: 0.95;
+      color: var(--yellow);
+      text-shadow:
+        0 0 40px rgba(245,197,24,0.25),
+        0 0 80px rgba(245,197,24,0.1);
+      animation: flicker 8s infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes flicker {
+      0%,94%,96%,100% { opacity: 1; }
+      95% { opacity: 0.85; }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+      letter-spacing: 0.4em;
+      color: var(--yellow-dim);
+      margin-top: 1.2rem;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===================== COUNTDOWN ===================== */
+    .countdown {
+      display: flex;
+      gap: clamp(1rem, 4vw, 3rem);
+      margin-top: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .countdown-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .countdown-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      line-height: 1;
+      color: var(--electric);
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 18px rgba(30,144,255,0.7), 0 0 40px rgba(30,144,255,0.3);
+      min-width: 2ch;
+      text-align: center;
+      transition: transform 0.15s ease;
+    }
+
+    .countdown-num.bump {
+      animation: bump 0.25s ease;
+    }
+
+    @keyframes bump {
+      0%   { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    .countdown-label {
+      font-size: clamp(0.5rem, 1.2vw, 0.65rem);
+      letter-spacing: 0.3em;
+      color: var(--electric-dim);
+      text-transform: uppercase;
+    }
+
+    .countdown-sep {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      color: var(--electric);
+      opacity: 0.5;
+      line-height: 1;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: 0.4; }
+      50%      { opacity: 0.05; }
+    }
+
+    /* ===================== EASTER EGG ZONE ===================== */
+    .easter-zone {
+      flex: 1;
+      position: relative;
+      min-height: 28vh;
+    }
+
+    .egg-btn {
+      position: absolute;
+      width: var(--easter-size);
+      height: var(--easter-size);
+      border: none;
+      background: var(--black);
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0.12;
+      transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .egg-btn:hover {
+      opacity: 0.6;
+      transform: scale(1.25);
+      box-shadow: 0 0 16px rgba(245,197,24,0.3);
+    }
+
+    .egg-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--yellow-dim);
+    }
+
+    /* positions */
+    .egg-1 { top: 20%; left: 8%; }
+    .egg-2 { top: 55%; left: 22%; }
+    .egg-3 { top: 15%; left: 48%; }
+    .egg-4 { top: 65%; left: 72%; }
+    .egg-5 { top: 30%; right: 9%; }
+
+    /* egg hidden until unlocked */
+    .egg-btn.locked {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* egg found state — icon turns yellow, stays visible */
+    .egg-btn.found {
+      opacity: 0.55 !important;
+      background: rgba(245,197,24,0.08);
+      box-shadow: 0 0 12px rgba(245,197,24,0.25);
+    }
+    .egg-btn.found svg {
+      fill: var(--yellow);
+    }
+
+    /* hero hint text */
+    .hero-hint {
+      font-size: clamp(0.65rem, 1.6vw, 0.8rem);
+      color: var(--yellow-dim);
+      margin-top: 1.4rem;
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* congrats message */
+    .congrats-msg {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .congrats-msg.visible {
+      display: block;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate(-50%, -40%); }
+      to   { opacity: 1; transform: translate(-50%, -50%); }
+    }
+    .congrats-msg p {
+      font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+      color: var(--yellow);
+      letter-spacing: 0.06em;
+      line-height: 1.7;
+      text-shadow: 0 0 30px rgba(245,197,24,0.4);
+      white-space: nowrap;
+    }
+    .congrats-msg .congrats-arrow {
+      font-size: 1.6rem;
+      margin-top: 0.5rem;
+      animation: bounce 1s ease infinite;
+      display: block;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(6px); }
+    }
+
+    /* ===================== MODAL ===================== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid rgba(245,197,24,0.2);
+      border-radius: 4px;
+      padding: 2.5rem;
+      max-width: 480px;
+      width: 90vw;
+      position: relative;
+      animation: modalIn 0.25s ease;
+      box-shadow: 0 0 60px rgba(245,197,24,0.08);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.92) translateY(12px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--yellow-dim);
+      font-size: 1.4rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .modal-close:hover { opacity: 1; }
+
+    .modal-tag {
+      font-size: 0.55rem;
+      letter-spacing: 0.4em;
+      color: var(--yellow-dim);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.06em;
+      color: var(--yellow);
+      margin-bottom: 1rem;
+    }
+
+    .modal-text {
+      font-size: 0.78rem;
+      line-height: 1.8;
+      color: #aaa;
+    }
+
+    .modal-video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: 1px solid rgba(245,197,24,0.15);
+      margin-top: 1rem;
+      border-radius: 2px;
+    }
+
+    .modal-audio-btn {
+      margin-top: 1.2rem;
+      background: var(--yellow);
+      color: var(--black);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.7rem 1.4rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .modal-audio-btn:hover { background: #e0b315; transform: scale(1.03); }
+
+    .found-counter {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    /* ===================== FOOTER ===================== */
+    footer {
+      flex: 0 0 auto;
+      background: var(--black);
+      border-top: 1px solid rgba(245,197,24,0.12);
+      padding: 2rem 2rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+
+    .notify-btn {
+      background: transparent;
+      border: 1px solid var(--yellow);
+      color: var(--yellow);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 0.75rem 2rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .notify-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--yellow);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .notify-btn:hover::before { transform: scaleX(1); }
+    .notify-btn:hover { color: var(--black); }
+
+    .notify-btn span { position: relative; z-index: 1; }
+
+    .notify-status {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--yellow-dim);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .notify-status.visible { opacity: 1; }
+
+    .footer-line {
+      width: 40px;
+      height: 1px;
+      background: rgba(245,197,24,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== STARFIELD ===== -->
+  <canvas id="starfield"></canvas>
+  <section class="hero">
+    <h1 class="hero-title">La nuova lista<br>sta arrivando</h1>
+    <p class="hero-subtitle">Girifalco vuole cambiare. Noi siamo pronti.</p>
+    <div class="countdown" id="countdown">
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-days">00</span>
+        <span class="countdown-label">Giorni</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-hours">00</span>
+        <span class="countdown-label">Ore</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-mins">00</span>
+        <span class="countdown-label">Minuti</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-secs">00</span>
+        <span class="countdown-label">Secondi</span>
+      </div>
+    </div>
+    <p class="hero-hint" id="heroHint">cerca nella pagina gli indizi. Buona fortuna! 🔍</p>
+  </section>
+
+  <!-- ===== EASTER EGG ZONE ===== -->
+  <div class="easter-zone" id="easterZone">
+
+    <!-- Egg 1: Video -->
+    <button class="egg-btn egg-1" data-egg="1" title="" aria-label="easter egg">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+
+    <!-- Egg 2: Text -->
+    <button class="egg-btn egg-2" data-egg="2" aria-label="easter egg">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h13"/><style>path{stroke:currentColor;stroke-width:2;fill:none}</style></svg>
+    </button>
+
+    <!-- Egg 3: Audio -->
+    <button class="egg-btn egg-3" data-egg="3" aria-label="easter egg">
+      <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    </button>
+
+    <!-- Egg 4: Text secret -->
+    <button class="egg-btn egg-4" data-egg="4" aria-label="easter egg">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </button>
+
+    <!-- Egg 5: Video/teaser — locked until 1-4 found -->
+    <button class="egg-btn egg-5 locked" data-egg="5" aria-label="easter egg">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </button>
+
+    <!-- Congrats message -->
+    <div class="congrats-msg" id="congratsMsg">
+      <p>complimenti! Hai trovato quasi tutti gli indizi.<br>Adesso l'ultimo sforzo :)</p>
+      <span class="congrats-arrow">→</span>
+    </div>
+
+    <p class="found-counter" id="foundCounter"></p>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-line"></div>
+    <p class="footer-text">Tutto verrà svelato il 20 Aprile — attiva le notifiche per scoprirlo</p>
+    <button class="notify-btn" id="notifyBtn" onclick="requestNotify()">
+      <span id="notifyBtnText">🔔 Attiva notifiche</span>
+    </button>
+    <p class="notify-status" id="notifyStatus"></p>
+    <div class="footer-line"></div>
+  </footer>
+
+  <!-- ===== MODAL ===== -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modalBox">
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+      <p class="modal-tag" id="modalTag">Easter Egg trovato</p>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== COUNTDOWN =====
+    const TARGET = new Date('2025-04-20T00:00:00');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function updateCd() {
+      const now = new Date();
+      let diff = TARGET - now;
+      if (diff < 0) diff = 0;
+
+      const secs  = Math.floor(diff / 1000) % 60;
+      const mins  = Math.floor(diff / 60000) % 60;
+      const hours = Math.floor(diff / 3600000) % 24;
+      const days  = Math.floor(diff / 86400000);
+
+      const elSecs  = document.getElementById('cd-secs');
+      const elMins  = document.getElementById('cd-mins');
+      const elHours = document.getElementById('cd-hours');
+      const elDays  = document.getElementById('cd-days');
+
+      function set(el, val) {
+        const str = pad(val);
+        if (el.textContent !== str) {
+          el.textContent = str;
+          el.classList.remove('bump');
+          void el.offsetWidth;
+          el.classList.add('bump');
+        }
+      }
+
+      set(elSecs,  secs);
+      set(elMins,  mins);
+      set(elHours, hours);
+      set(elDays,  days);
+    }
+
+    updateCd();
+    setInterval(updateCd, 1000);
+
+    // ===== EASTER EGGS =====
+    const eggs = {
+      1: {
+        tag: '🎬 Easter Egg #1 — Video',
+        title: 'Un assaggio',
+        content: `
+          <p class="modal-text">Hai trovato il primo easter egg. Ecco un breve teaser di quello che sta per arrivare.</p>
+          <iframe class="modal-video"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1"
+            allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        `
+      },
+      2: {
+        tag: '📜 Easter Egg #2 — Messaggio segreto',
+        title: 'Sai già tutto?',
+        content: `
+          <p class="modal-text">
+            Non tutti ci arrivano subito.<br><br>
+            Questa lista cambierà tutto quello che pensi di sapere. Abbiamo lavorato in silenzio per mesi. Il 20 aprile non sarà solo un video — sarà un inizio.<br><br>
+            <em style="color:var(--yellow-dim)">— Il Team</em>
+          </p>
+        `
+      },
+      3: {
+        tag: '🎵 Easter Egg #3 — Audio',
+        title: 'Ascolta bene',
+        content: `
+          <p class="modal-text">Un messaggio audio lasciato per i più curiosi. Premi play.</p>
+          <button class="modal-audio-btn" onclick="playBeep()"><span>▶ Riproduci messaggio</span></button>
+          <p id="audioMsg" style="margin-top:1rem;font-size:0.7rem;color:var(--yellow-dim);display:none;">
+            "Il segreto è nell'elenco. Conta le voci. Il numero parla."
+          </p>
+        `
+      },
+      4: {
+        tag: '❓ Easter Egg #4 — Indizio',
+        title: 'Un indizio',
+        content: `
+          <p class="modal-text">
+            Tre elementi. Un concetto.<br><br>
+            🥇 &nbsp; Qualità<br>
+            🗂️ &nbsp; Ordine<br>
+            🌍 &nbsp; Portata<br><br>
+            Cosa ottieni mettendoli insieme? Scoprilo il 20 aprile.
+          </p>
+        `
+      },
+      5: {
+        tag: '⭐ Easter Egg #5 — Rarissimo',
+        title: 'Trovato tutto.',
+        content: `
+          <p class="modal-text">
+            Sei tra i pochissimi ad aver trovato tutti gli easter egg.<br><br>
+            Come ricompensa: il giorno dell'evento, cerca il <strong style="color:var(--yellow)">codice EARLY20</strong> — ti darà accesso prioritario a qualcosa di speciale.<br><br>
+            Non condividere questo messaggio. 🤫
+          </p>
+        `
+      }
+    };
+
+    let foundSet = new Set();
+    const TOTAL_BEFORE_FINAL = 4; // eggs 1-4 must be found before egg 5 unlocks
+
+    function updateFoundCounter() {
+      const el = document.getElementById('foundCounter');
+      if (foundSet.size > 0) {
+        el.textContent = `Easter egg trovati: ${foundSet.size} / 5`;
+      }
+    }
+
+    function checkUnlockFinal() {
+      // Count how many of eggs 1-4 are found
+      const mainFound = ['1','2','3','4'].filter(id => foundSet.has(id)).length;
+      const egg5 = document.querySelector('.egg-5');
+      const congrats = document.getElementById('congratsMsg');
+
+      if (mainFound >= TOTAL_BEFORE_FINAL && !foundSet.has('5')) {
+        // Unlock egg 5 with a little entrance animation
+        egg5.classList.remove('locked');
+        egg5.style.transition = 'opacity 0.8s ease, transform 0.8s ease, box-shadow 0.3s';
+        // Show congrats message
+        congrats.classList.add('visible');
+        // Hide congrats after egg 5 is interacted with (handled on click)
+      }
+    }
+
+    document.querySelectorAll('.egg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.egg;
+        foundSet.add(id);
+
+        // Mark button as found — turns yellow, stays visible
+        btn.classList.add('found');
+
+        // Hide congrats message once egg 5 is clicked
+        if (id === '5') {
+          document.getElementById('congratsMsg').classList.remove('visible');
+        }
+
+        updateFoundCounter();
+        checkUnlockFinal();
+        openModal(id);
+      });
+    });
+
+    function openModal(id) {
+      const data = eggs[id];
+      document.getElementById('modalTag').textContent = data.tag;
+      document.getElementById('modalTitle').textContent = data.title;
+      document.getElementById('modalContent').innerHTML = data.content;
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+    }
+
+    function closeModalDirect() {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.getElementById('modalContent').innerHTML = '';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModalDirect();
+    });
+
+    // Audio beep (Web Audio API — no external file needed)
+    function playBeep() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const notes = [261, 293, 329, 349, 392, 440, 493, 523];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.18);
+        gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + i * 0.18 + 0.05);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + i * 0.18 + 0.16);
+        osc.start(ctx.currentTime + i * 0.18);
+        osc.stop(ctx.currentTime + i * 0.18 + 0.18);
+      });
+      document.getElementById('audioMsg').style.display = 'block';
+    }
+
+    // ===== NOTIFICATIONS =====
+    async function requestNotify() {
+      const btn = document.getElementById('notifyBtn');
+      const status = document.getElementById('notifyStatus');
+
+      if (!('Notification' in window)) {
+        status.textContent = '⚠ Il tuo browser non supporta le notifiche.';
+        status.classList.add('visible');
+        return;
+      }
+
+      if (Notification.permission === 'granted') {
+        sendNotification();
+        return;
+      }
+
+      const perm = await Notification.requestPermission();
+
+      if (perm === 'granted') {
+        document.getElementById('notifyBtnText').textContent = '✓ Notifiche attivate';
+        btn.style.borderColor = '#4caf50';
+        btn.style.color = '#4caf50';
+        status.textContent = 'Ti avviseremo il 20 aprile. Tieniti pronto.';
+        status.style.color = '#4caf50';
+        status.classList.add('visible');
+        sendNotification();
+      } else if (perm === 'denied') {
+        status.textContent = '✗ Notifiche bloccate. Abilitale nelle impostazioni del browser.';
+        status.classList.add('visible');
+      } else {
+        status.textContent = 'Permesso non concesso.';
+        status.classList.add('visible');
+      }
+    }
+
+    function sendNotification() {
+      new Notification('La nuova lista sta arrivando 🔔', {
+        body: 'Sei registrato! Ti avviseremo il 20 aprile. Tieniti pronto.',
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%230d0d0d"/><text x="32" y="45" text-anchor="middle" font-size="36" fill="%23f5c518">★</text></svg>'
+      });
+    }
+    // ===== STARFIELD =====
+    (function() {
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      const COUNT = 160;
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      function randomStar() {
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.4 + 0.3,           // radius 0.3–1.7px
+          base: Math.random() * 0.275 + 0.05,       // base opacity (50% dimmer)
+          phase: Math.random() * Math.PI * 2,      // random start phase
+          speed: Math.random() * 0.008 + 0.003,    // flicker speed
+          amp:   Math.random() * 0.225 + 0.05,     // flicker amplitude (50% dimmer)
+        };
+      }
+
+      function init() {
+        resize();
+        stars = Array.from({ length: COUNT }, randomStar);
+      }
+
+      function draw(t) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const s of stars) {
+          const alpha = s.base + Math.sin(s.phase + t * s.speed) * s.amp;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+
+          // Occasional larger stars get a soft glow
+          if (s.r > 1.1) {
+            const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+            grd.addColorStop(0,   `rgba(255,255,255,${alpha})`);
+            grd.addColorStop(0.4, `rgba(255,255,255,${alpha * 0.3})`);
+            grd.addColorStop(1,   'rgba(255,255,255,0)');
+            ctx.fillStyle = grd;
+            ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
+          } else {
+            ctx.fillStyle = `rgba(255,255,255,${Math.max(0, Math.min(1, alpha))})`;
+          }
+
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+        stars = Array.from({ length: COUNT }, randomStar);
+      });
+
+      init();
+      requestAnimationFrame(draw);
+    })();
+
+  </script>
+</body>
+</html>
