@@ -487,27 +487,27 @@
   <div class="easter-zone" id="easterZone">
 
     <!-- Egg 1: Video -->
-    <button class="egg-btn egg-1" data-egg="1" title="" aria-label="easter egg">
+    <button class="egg-btn egg-1" data-egg="1" title="" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </button>
 
     <!-- Egg 2: Text -->
-    <button class="egg-btn egg-2" data-egg="2" aria-label="easter egg">
+    <button class="egg-btn egg-2" data-egg="2" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h13"/><style>path{stroke:currentColor;stroke-width:2;fill:none}</style></svg>
     </button>
 
     <!-- Egg 3: Audio -->
-    <button class="egg-btn egg-3" data-egg="3" aria-label="easter egg">
+    <button class="egg-btn egg-3" data-egg="3" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
     </button>
 
     <!-- Egg 4: Text secret -->
-    <button class="egg-btn egg-4" data-egg="4" aria-label="easter egg">
+    <button class="egg-btn egg-4" data-egg="4" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
     </button>
 
     <!-- Egg 5: Video/teaser — locked until 1-4 found -->
-    <button class="egg-btn egg-5 locked" data-egg="5" aria-label="easter egg">
+    <button class="egg-btn egg-5 locked" data-egg="5" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
     </button>
 
@@ -535,7 +535,7 @@
   <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
     <div class="modal" id="modalBox">
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
-      <p class="modal-tag" id="modalTag">Easter Egg trovato</p>
+      <p class="modal-tag" id="modalTag">Indizio trovato</p>
       <h2 class="modal-title" id="modalTitle"></h2>
       <div id="modalContent"></div>
     </div>
@@ -584,17 +584,17 @@
     // ===== EASTER EGGS =====
     const eggs = {
       1: {
-        tag: '🎬 Easter Egg #1 — Video',
+        tag: '🎬 Indizio #1 — Video',
         title: 'Un assaggio',
         content: `
-          <p class="modal-text">Hai trovato il primo easter egg. Ecco un breve teaser di quello che sta per arrivare.</p>
+          <p class="modal-text">Hai trovato il primo indizio. Ecco un breve teaser di quello che sta per arrivare.</p>
           <iframe class="modal-video"
             src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1"
             allow="autoplay; encrypted-media" allowfullscreen></iframe>
         `
       },
       2: {
-        tag: '📜 Easter Egg #2 — Messaggio segreto',
+        tag: '📜 Indizio #2 — Messaggio segreto',
         title: 'Sai già tutto?',
         content: `
           <p class="modal-text">
@@ -605,7 +605,7 @@
         `
       },
       3: {
-        tag: '🎵 Easter Egg #3 — Audio',
+        tag: '🎵 Indizio #3 — Audio',
         title: 'Ascolta bene',
         content: `
           <p class="modal-text">Un messaggio audio lasciato per i più curiosi. Premi play.</p>
@@ -616,7 +616,7 @@
         `
       },
       4: {
-        tag: '❓ Easter Egg #4 — Indizio',
+        tag: '❓ Indizio #4 — Indizio',
         title: 'Un indizio',
         content: `
           <p class="modal-text">
@@ -629,11 +629,11 @@
         `
       },
       5: {
-        tag: '⭐ Easter Egg #5 — Rarissimo',
+        tag: '⭐ Indizio #5 — Rarissimo',
         title: 'Trovato tutto.',
         content: `
           <p class="modal-text">
-            Sei tra i pochissimi ad aver trovato tutti gli easter egg.<br><br>
+            Sei tra i pochissimi ad aver trovato tutti gli indizio.<br><br>
             Come ricompensa: il giorno dell'evento, cerca il <strong style="color:var(--yellow)">codice EARLY20</strong> — ti darà accesso prioritario a qualcosa di speciale.<br><br>
             Non condividere questo messaggio. 🤫
           </p>
@@ -647,7 +647,7 @@
     function updateFoundCounter() {
       const el = document.getElementById('foundCounter');
       if (foundSet.size > 0) {
-        el.textContent = `Easter egg trovati: ${foundSet.size} / 5`;
+        el.textContent = `Indizio trovati: ${foundSet.size} / 5`;
       }
     }
 
