@@ -432,19 +432,22 @@
     footer {
       flex: 0 0 auto;
       background: var(--black);
-      border-top: 1px solid rgba(245,197,24,0.12);
-      padding: 2rem;
+      border-top: 1px solid rgba(245,197,24,0.2);
+      padding: 3rem 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .footer-text {
-      font-size: clamp(0.7rem, 2vw, 0.9rem);
-      letter-spacing: 0.25em;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--yellow-dim);
-      opacity: 0.5;
+      text-align: center;
+      color: var(--yellow);
+      line-height: 1.8;
     }
   </style>
 </head>
@@ -528,7 +531,7 @@
   </div>
 
   <footer>
-    <p class="footer-text">20 · 04 · 2026</p>
+    <p class="footer-text">Tutto verrà svelato il 20 Aprile<br>su questo sito.</p>
   </footer>
 
   <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
