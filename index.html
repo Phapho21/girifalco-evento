@@ -124,6 +124,7 @@
       margin-top: 2.5rem;
       position: relative;
       z-index: 1;
+      transition: opacity 0.8s ease;
     }
 
     .countdown-block {
@@ -175,6 +176,84 @@
       50%      { opacity: 0.05; }
     }
 
+    /* ===================== VIDEO SECTION ===================== */
+    #video-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 720px;
+      padding: 0 1.5rem;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    #video-section.visible {
+      display: flex;
+    }
+
+    .video-reveal-label {
+      font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+      letter-spacing: 0.3em;
+      color: var(--yellow);
+      text-transform: uppercase;
+    }
+
+    .video-wrapper {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #111;
+      border: 1px solid rgba(245,197,24,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Placeholder shown until a real video src is set */
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .video-placeholder .play-ring {
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--yellow);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--yellow);
+    }
+
+    .video-placeholder p {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--yellow-dim);
+      text-transform: uppercase;
+    }
+
+    /* Real video element — hidden by default */
+    #mainVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     /* ===================== EASTER EGG ZONE ===================== */
     .easter-zone {
       flex: 1;
@@ -210,30 +289,24 @@
       fill: var(--yellow-dim);
     }
 
-    /* positions */
     .egg-1 { top: 20%; left: 8%; }
     .egg-2 { top: 55%; left: 22%; }
     .egg-3 { top: 15%; left: 48%; }
     .egg-4 { top: 65%; left: 72%; }
     .egg-5 { top: 30%; right: 9%; }
 
-    /* egg hidden until unlocked */
     .egg-btn.locked {
       opacity: 0 !important;
       pointer-events: none !important;
     }
 
-    /* egg found state — icon turns yellow, stays visible */
     .egg-btn.found {
       opacity: 0.55 !important;
       background: rgba(245,197,24,0.08);
       box-shadow: 0 0 12px rgba(245,197,24,0.25);
     }
-    .egg-btn.found svg {
-      fill: var(--yellow);
-    }
+    .egg-btn.found svg { fill: var(--yellow); }
 
-    /* hero hint text */
     .hero-hint {
       font-size: clamp(0.65rem, 1.6vw, 0.8rem);
       color: var(--yellow-dim);
@@ -244,7 +317,6 @@
       z-index: 1;
     }
 
-    /* congrats message */
     .congrats-msg {
       display: none;
       position: absolute;
@@ -258,10 +330,6 @@
     .congrats-msg.visible {
       display: block;
       animation: fadeInUp 0.6s ease forwards;
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translate(-50%, -40%); }
-      to   { opacity: 1; transform: translate(-50%, -50%); }
     }
     .congrats-msg p {
       font-size: clamp(0.85rem, 2.2vw, 1.1rem);
@@ -282,6 +350,14 @@
       50%      { transform: translateY(6px); }
     }
 
+    .found-counter {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--yellow-dim);
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
     /* ===================== MODAL ===================== */
     .modal-overlay {
       display: none;
@@ -294,9 +370,7 @@
       backdrop-filter: blur(4px);
     }
 
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
 
     .modal {
       background: var(--surface);
@@ -317,8 +391,7 @@
 
     .modal-close {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
+      top: 1rem; right: 1rem;
       background: none;
       border: none;
       color: var(--yellow-dim);
@@ -377,14 +450,6 @@
     }
     .modal-audio-btn:hover { background: #e0b315; transform: scale(1.03); }
 
-    .found-counter {
-      font-size: 0.6rem;
-      letter-spacing: 0.25em;
-      color: var(--text-muted);
-      text-align: center;
-      padding: 0.5rem 0;
-    }
-
     /* ===================== FOOTER ===================== */
     footer {
       flex: 0 0 auto;
@@ -433,8 +498,15 @@
 
     .notify-btn:hover::before { transform: scaleX(1); }
     .notify-btn:hover { color: var(--black); }
-
     .notify-btn span { position: relative; z-index: 1; }
+
+    .notify-btn:disabled {
+      border-color: #4caf50;
+      color: #4caf50;
+      cursor: default;
+    }
+    .notify-btn:disabled::before { display: none; }
+    .notify-btn:disabled:hover { color: #4caf50; }
 
     .notify-status {
       font-size: 0.6rem;
@@ -442,8 +514,11 @@
       color: var(--yellow-dim);
       opacity: 0;
       transition: opacity 0.4s;
+      min-height: 1.2em;
     }
     .notify-status.visible { opacity: 1; }
+    .notify-status.success { color: #4caf50; }
+    .notify-status.error   { color: #e53935; }
 
     .footer-line {
       width: 40px;
@@ -456,9 +531,12 @@
 
   <!-- ===== STARFIELD ===== -->
   <canvas id="starfield"></canvas>
+
   <section class="hero">
-    <h1 class="hero-title">La nuova lista<br>sta arrivando</h1>
+    <h1 class="hero-title">La nuova Lista<br>sta arrivando</h1>
     <p class="hero-subtitle"><strong>Girifalco vuole cambiare.</strong><br>Noi siamo pronti.</p>
+
+    <!-- COUNTDOWN -->
     <div class="countdown" id="countdown">
       <div class="countdown-block">
         <span class="countdown-num" id="cd-days">00</span>
@@ -480,43 +558,55 @@
         <span class="countdown-label">Secondi</span>
       </div>
     </div>
-    <p class="hero-hint" id="heroHint">cerca nella pagina gli indizi. Buona fortuna! 🔍</p>
+
+    <!-- VIDEO (shown when countdown ends) -->
+    <div id="video-section">
+      <p class="video-reveal-label">20 Aprile 2026 — Il momento è arrivato</p>
+      <div class="video-wrapper">
+        <!--
+          Quando hai il video, rimuovi il placeholder e decommenta una di queste opzioni:
+
+          OPZIONE A — file video diretto:
+          <video id="mainVideo" controls autoplay>
+            <source src="IL_TUO_VIDEO.mp4" type="video/mp4">
+          </video>
+
+          OPZIONE B — YouTube embed:
+          <iframe style="width:100%;height:100%;border:none;"
+            src="https://www.youtube.com/embed/IL_TUO_ID?autoplay=1"
+            allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        -->
+        <div class="video-placeholder">
+          <div class="play-ring">▶</div>
+          <p>Inserisci il link al tuo video nel codice</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="hero-hint" id="heroHint">Cerca nella pagina gli indizi. Buona fortuna! 🔍</p>
   </section>
 
   <!-- ===== EASTER EGG ZONE ===== -->
   <div class="easter-zone" id="easterZone">
-
-    <!-- Egg 1: Video -->
-    <button class="egg-btn egg-1" data-egg="1" title="" aria-label="indizio">
+    <button class="egg-btn egg-1" data-egg="1" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </button>
-
-    <!-- Egg 2: Text -->
     <button class="egg-btn egg-2" data-egg="2" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h13"/><style>path{stroke:currentColor;stroke-width:2;fill:none}</style></svg>
     </button>
-
-    <!-- Egg 3: Audio -->
     <button class="egg-btn egg-3" data-egg="3" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
     </button>
-
-    <!-- Egg 4: Text secret -->
     <button class="egg-btn egg-4" data-egg="4" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
     </button>
-
-    <!-- Egg 5: Video/teaser — locked until 1-4 found -->
     <button class="egg-btn egg-5 locked" data-egg="5" aria-label="indizio">
       <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
     </button>
-
-    <!-- Congrats message -->
     <div class="congrats-msg" id="congratsMsg">
       <p>complimenti! Hai trovato quasi tutti gli indizi.<br>Adesso l'ultimo sforzo :)</p>
       <span class="congrats-arrow">→</span>
     </div>
-
     <p class="found-counter" id="foundCounter"></p>
   </div>
 
@@ -524,7 +614,7 @@
   <footer>
     <div class="footer-line"></div>
     <p class="footer-text">Tutto verrà svelato il 20 Aprile — attiva le notifiche per scoprirlo</p>
-    <button class="notify-btn" id="notifyBtn" onclick="requestNotify()">
+    <button class="notify-btn" id="notifyBtn" onclick="activateNotifications()">
       <span id="notifyBtnText">🔔 Attiva notifiche</span>
     </button>
     <p class="notify-status" id="notifyStatus"></p>
@@ -542,27 +632,28 @@
   </div>
 
   <script>
-    // ===== COUNTDOWN =====
-    const TARGET = new Date('2026-04-20T00:00:00+02:00');
+    // =========================================================
+    //  COUNTDOWN
+    // =========================================================
+    const TARGET = new Date('2026-04-20T09:00:00+02:00');
 
-    function pad(n) { return String(n).padStart(2, '0'); }
+    function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
 
     function updateCd() {
-      const now = new Date();
-      let diff = TARGET - now;
-      if (diff < 0) diff = 0;
+      const diff = TARGET - new Date();
 
-      const secs  = Math.floor(diff / 1000) % 60;
-      const mins  = Math.floor(diff / 60000) % 60;
-      const hours = Math.floor(diff / 3600000) % 24;
+      if (diff <= 0) {
+        revealVideo();
+        return;
+      }
+
+      const secs  = Math.floor(diff / 1000)     % 60;
+      const mins  = Math.floor(diff / 60000)    % 60;
+      const hours = Math.floor(diff / 3600000)  % 24;
       const days  = Math.floor(diff / 86400000);
 
-      const elSecs  = document.getElementById('cd-secs');
-      const elMins  = document.getElementById('cd-mins');
-      const elHours = document.getElementById('cd-hours');
-      const elDays  = document.getElementById('cd-days');
-
-      function set(el, val) {
+      function set(id, val) {
+        const el = document.getElementById(id);
         const str = pad(val);
         if (el.textContent !== str) {
           el.textContent = str;
@@ -572,16 +663,134 @@
         }
       }
 
-      set(elSecs,  secs);
-      set(elMins,  mins);
-      set(elHours, hours);
-      set(elDays,  days);
+      set('cd-secs',  secs);
+      set('cd-mins',  mins);
+      set('cd-hours', hours);
+      set('cd-days',  days);
+    }
+
+    function revealVideo() {
+      clearInterval(cdInterval);
+      // Fade out countdown
+      const cdEl = document.getElementById('countdown');
+      cdEl.style.opacity = '0';
+      cdEl.style.transition = 'opacity 0.8s ease';
+      setTimeout(() => {
+        cdEl.style.display = 'none';
+        document.getElementById('video-section').classList.add('visible');
+      }, 800);
     }
 
     updateCd();
-    setInterval(updateCd, 1000);
+    const cdInterval = setInterval(updateCd, 1000);
 
-    // ===== EASTER EGGS =====
+    // =========================================================
+    //  NOTIFICATIONS — 3 scheduled: -20gg, -10gg, giorno evento
+    // =========================================================
+    const NOTIFICATIONS = [
+      {
+        id: 'n20',
+        date: new Date('2026-03-31T09:00:00+02:00'),
+        title: '🔔 Girifalco — Mancano 20 giorni!',
+        body:  'Qualcosa sta per cambiare. Seguici per scoprire di più il 20 aprile.'
+      },
+      {
+        id: 'n10',
+        date: new Date('2026-04-10T09:00:00+02:00'),
+        title: '🔔 Girifalco — Mancano 10 giorni!',
+        body:  'Ci siamo quasi. Il 20 aprile tutto sarà svelato.'
+      },
+      {
+        id: 'nevent',
+        date: new Date('2026-04-20T09:00:00+02:00'),
+        title: '🦅 Girifalco — Oggi è il giorno!',
+        body:  'Il momento è arrivato. Entra sul sito e scopri tutto.'
+      }
+    ];
+
+    const LS_KEY = 'girifalco_notif_v1';
+    const MAX_TIMEOUT = 2100000000; // ~24 giorni in ms
+
+    function scheduleAll() {
+      const sent = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+      const now  = Date.now();
+      NOTIFICATIONS.forEach(n => {
+        if (sent[n.id]) return;
+        const delay = n.date.getTime() - now;
+        if (delay < 0) {
+          // data già passata — segna senza inviare
+          sent[n.id] = true;
+          localStorage.setItem(LS_KEY, JSON.stringify(sent));
+        } else {
+          scheduleOne(n, delay);
+        }
+      });
+    }
+
+    function scheduleOne(n, delay) {
+      if (delay > MAX_TIMEOUT) {
+        // Rinvia ricorsivamente finché il delay entra nel range di setTimeout
+        setTimeout(() => {
+          const newDelay = n.date.getTime() - Date.now();
+          scheduleOne(n, Math.max(0, newDelay));
+        }, MAX_TIMEOUT);
+      } else {
+        setTimeout(() => {
+          const sent = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+          if (sent[n.id] || Notification.permission !== 'granted') return;
+          new Notification(n.title, { body: n.body });
+          sent[n.id] = true;
+          localStorage.setItem(LS_KEY, JSON.stringify(sent));
+        }, delay);
+      }
+    }
+
+    async function activateNotifications() {
+      const btn    = document.getElementById('notifyBtn');
+      const btnTxt = document.getElementById('notifyBtnText');
+      const status = document.getElementById('notifyStatus');
+
+      if (!('Notification' in window)) {
+        status.textContent = '⚠ Il tuo browser non supporta le notifiche.';
+        status.className = 'notify-status visible error';
+        return;
+      }
+
+      const perm = await Notification.requestPermission();
+
+      if (perm === 'granted') {
+        scheduleAll();
+        btn.disabled   = true;
+        btnTxt.textContent = '✓ Notifiche attivate';
+        status.textContent = 'Riceverai un avviso il 31 marzo, il 10 aprile e il 20 aprile.';
+        status.className   = 'notify-status visible success';
+      } else if (perm === 'denied') {
+        status.textContent = '✗ Notifiche bloccate. Abilitale nelle impostazioni del browser.';
+        status.className   = 'notify-status visible error';
+      } else {
+        status.textContent = 'Permesso non concesso. Riprova.';
+        status.className   = 'notify-status visible';
+      }
+    }
+
+    // Al caricamento: se già attivate, ri-schedula quelle mancanti
+    window.addEventListener('load', () => {
+      if (Notification.permission === 'granted') {
+        const sent = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+        if (Object.keys(sent).length > 0) {
+          scheduleAll();
+          document.getElementById('notifyBtn').disabled = true;
+          document.getElementById('notifyBtnText').textContent = '✓ Notifiche attivate';
+          const s = document.getElementById('notifyStatus');
+          s.textContent = 'Le notifiche sono già attive.';
+          s.className = 'notify-status visible success';
+        }
+      }
+    });
+
+    // =========================================================
+    //  EASTER EGGS
+    // =========================================================
     const eggs = {
       1: {
         tag: '🎬 Indizio #1 — Video',
@@ -632,65 +841,48 @@
         tag: '⭐ Indizio #5 — Rarissimo',
         title: 'Trovato tutto.',
         content: `
-          <p class="modal-text">
-            Sei tra i pochissimi ad aver trovato tutti gli indizio.<br><br>
-            Come ricompensa: il giorno dell'evento, cerca il <strong style="color:var(--yellow)">codice EARLY20</strong> — ti darà accesso prioritario a qualcosa di speciale.<br><br>
-            Non condividere questo messaggio. 🤫
-          </p>
+          <p class="modal-text">Sei tra i pochissimi ad aver trovato tutti gli indizi. Ecco la tua ricompensa.</p>
+          <iframe class="modal-video"
+            src="https://www.youtube.com/embed/qG7aT8jb3Zc?autoplay=1"
+            allow="autoplay; encrypted-media" allowfullscreen></iframe>
         `
       }
     };
 
     let foundSet = new Set();
-    const TOTAL_BEFORE_FINAL = 4; // eggs 1-4 must be found before egg 5 unlocks
-
-    function updateFoundCounter() {
-      const el = document.getElementById('foundCounter');
-      if (foundSet.size > 0) {
-        el.textContent = `Indizio trovati: ${foundSet.size} / 5`;
-      }
-    }
-
-    function checkUnlockFinal() {
-      // Count how many of eggs 1-4 are found
-      const mainFound = ['1','2','3','4'].filter(id => foundSet.has(id)).length;
-      const egg5 = document.querySelector('.egg-5');
-      const congrats = document.getElementById('congratsMsg');
-
-      if (mainFound >= TOTAL_BEFORE_FINAL && !foundSet.has('5')) {
-        // Unlock egg 5 with a little entrance animation
-        egg5.classList.remove('locked');
-        egg5.style.transition = 'opacity 0.8s ease, transform 0.8s ease, box-shadow 0.3s';
-        // Show congrats message
-        congrats.classList.add('visible');
-        // Hide congrats after egg 5 is interacted with (handled on click)
-      }
-    }
 
     document.querySelectorAll('.egg-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.egg;
         foundSet.add(id);
-
-        // Mark button as found — turns yellow, stays visible
         btn.classList.add('found');
-
-        // Hide congrats message once egg 5 is clicked
-        if (id === '5') {
-          document.getElementById('congratsMsg').classList.remove('visible');
-        }
-
+        if (id === '5') document.getElementById('congratsMsg').classList.remove('visible');
         updateFoundCounter();
         checkUnlockFinal();
         openModal(id);
       });
     });
 
+    function updateFoundCounter() {
+      const el = document.getElementById('foundCounter');
+      el.textContent = foundSet.size > 0 ? `Indizi trovati: ${foundSet.size} / 5` : '';
+    }
+
+    function checkUnlockFinal() {
+      const mainFound = ['1','2','3','4'].filter(id => foundSet.has(id)).length;
+      const egg5 = document.querySelector('.egg-5');
+      if (mainFound >= 4 && !foundSet.has('5')) {
+        egg5.classList.remove('locked');
+        egg5.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        document.getElementById('congratsMsg').classList.add('visible');
+      }
+    }
+
     function openModal(id) {
       const data = eggs[id];
-      document.getElementById('modalTag').textContent = data.tag;
-      document.getElementById('modalTitle').textContent = data.title;
-      document.getElementById('modalContent').innerHTML = data.content;
+      document.getElementById('modalTag').textContent     = data.tag;
+      document.getElementById('modalTitle').textContent   = data.title;
+      document.getElementById('modalContent').innerHTML   = data.content;
       document.getElementById('modalOverlay').classList.add('open');
     }
 
@@ -703,16 +895,13 @@
       document.getElementById('modalContent').innerHTML = '';
     }
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeModalDirect();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
 
-    // Audio beep (Web Audio API — no external file needed)
     function playBeep() {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const notes = [261, 293, 329, 349, 392, 440, 493, 523];
       notes.forEach((freq, i) => {
-        const osc = ctx.createOscillator();
+        const osc  = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -720,56 +909,17 @@
         osc.frequency.value = freq;
         gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.18);
         gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + i * 0.18 + 0.05);
-        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + i * 0.18 + 0.16);
+        gain.gain.linearRampToValueAtTime(0,    ctx.currentTime + i * 0.18 + 0.16);
         osc.start(ctx.currentTime + i * 0.18);
-        osc.stop(ctx.currentTime + i * 0.18 + 0.18);
+        osc.stop(ctx.currentTime  + i * 0.18 + 0.18);
       });
       document.getElementById('audioMsg').style.display = 'block';
     }
 
-    // ===== NOTIFICATIONS =====
-    async function requestNotify() {
-      const btn = document.getElementById('notifyBtn');
-      const status = document.getElementById('notifyStatus');
-
-      if (!('Notification' in window)) {
-        status.textContent = '⚠ Il tuo browser non supporta le notifiche.';
-        status.classList.add('visible');
-        return;
-      }
-
-      if (Notification.permission === 'granted') {
-        sendNotification();
-        return;
-      }
-
-      const perm = await Notification.requestPermission();
-
-      if (perm === 'granted') {
-        document.getElementById('notifyBtnText').textContent = '✓ Notifiche attivate';
-        btn.style.borderColor = '#4caf50';
-        btn.style.color = '#4caf50';
-        status.textContent = 'Ti avviseremo il 20 aprile. Tieniti pronto.';
-        status.style.color = '#4caf50';
-        status.classList.add('visible');
-        sendNotification();
-      } else if (perm === 'denied') {
-        status.textContent = '✗ Notifiche bloccate. Abilitale nelle impostazioni del browser.';
-        status.classList.add('visible');
-      } else {
-        status.textContent = 'Permesso non concesso.';
-        status.classList.add('visible');
-      }
-    }
-
-    function sendNotification() {
-      new Notification('La nuova lista sta arrivando 🔔', {
-        body: 'Sei registrato! Ti avviseremo il 20 aprile. Tieniti pronto.',
-        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%230d0d0d"/><text x="32" y="45" text-anchor="middle" font-size="36" fill="%23f5c518">★</text></svg>'
-      });
-    }
-    // ===== STARFIELD =====
-    (function() {
+    // =========================================================
+    //  STARFIELD
+    // =========================================================
+    (function () {
       const canvas = document.getElementById('starfield');
       const ctx = canvas.getContext('2d');
       let stars = [];
@@ -782,20 +932,17 @@
 
       function randomStar() {
         return {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.4 + 0.3,           // radius 0.3–1.7px
-          base: Math.random() * 0.275 + 0.05,       // base opacity (50% dimmer)
-          phase: Math.random() * Math.PI * 2,      // random start phase
-          speed: Math.random() * 0.008 + 0.003,    // flicker speed
-          amp:   Math.random() * 0.225 + 0.05,     // flicker amplitude (50% dimmer)
+          x:     Math.random() * canvas.width,
+          y:     Math.random() * canvas.height,
+          r:     Math.random() * 1.4 + 0.3,
+          base:  Math.random() * 0.275 + 0.05,
+          phase: Math.random() * Math.PI * 2,
+          speed: Math.random() * 0.008 + 0.003,
+          amp:   Math.random() * 0.225 + 0.05,
         };
       }
 
-      function init() {
-        resize();
-        stars = Array.from({ length: COUNT }, randomStar);
-      }
+      function init() { resize(); stars = Array.from({ length: COUNT }, randomStar); }
 
       function draw(t) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -803,8 +950,6 @@
           const alpha = s.base + Math.sin(s.phase + t * s.speed) * s.amp;
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-
-          // Occasional larger stars get a soft glow
           if (s.r > 1.1) {
             const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
             grd.addColorStop(0,   `rgba(255,255,255,${alpha})`);
@@ -815,21 +960,15 @@
           } else {
             ctx.fillStyle = `rgba(255,255,255,${Math.max(0, Math.min(1, alpha))})`;
           }
-
           ctx.fill();
         }
         requestAnimationFrame(draw);
       }
 
-      window.addEventListener('resize', () => {
-        resize();
-        stars = Array.from({ length: COUNT }, randomStar);
-      });
-
+      window.addEventListener('resize', () => { resize(); stars = Array.from({ length: COUNT }, randomStar); });
       init();
       requestAnimationFrame(draw);
     })();
-
   </script>
 </body>
 </html>
